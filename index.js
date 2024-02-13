@@ -46,7 +46,7 @@ const ProductObj = JSON.parse(data);
 
 const server = http.createServer((req, res) => {
     console.log(req.url);
-    const pathname = req.url;
+    const {query,pathname}=url.parse(req.url,true)
     if (pathname === '/' || pathname === '/overview') {
         
         let objectCards=ProductObj.map(el=>Replaceelement(Card,el)).join("")
@@ -57,7 +57,13 @@ const server = http.createServer((req, res) => {
         });
         res.end(output);
     } else if (pathname === '/product') {
-        res.end("Hello from the Product buddy ");
+        const productCard=ProductObj[query.id]
+        const output=Replaceelement(Product,productCard)
+        res.writeHead(200, {
+            'Content-type': 'text/html'
+        });
+       
+        res.end(output);
     } else if (pathname === '/api') {
         res.writeHead(200, {
             'Content-type': 'application/json'
